@@ -25,11 +25,19 @@ public class SynacorVM {
     // Initialize the program counter
     programCounter = 0;
     
+    // Run!
+    runProgram = true;
+    
     LOGGER.log(Level.FINE, "Finised initializing VM.");
   }
   
+  // Public access to memory for loading binary
+  public void writeMemory(int address, int data) {
+    memory.write(address, data);
+  }
+  
   // Start the VMs program execution
-  private void begin() {
+  public void begin() {
     
     int opcode;
     
