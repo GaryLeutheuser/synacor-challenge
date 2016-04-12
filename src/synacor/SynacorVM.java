@@ -1,12 +1,17 @@
 package synacor;
 
 import java.util.Stack;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class SynacorVM {
+  // Logging
+  private static final Logger LOGGER = Logger.getLogger(SynacorVM.class.getName());
+  
   // Storage regions
-  final private Memory memory;
-  final private RegisterBank registerBank;
-  final private Stack stack;
+  private final Memory memory;
+  private final RegisterBank registerBank;
+  private final Stack stack;
   
   private int programCounter;
   private boolean runProgram;
@@ -19,6 +24,8 @@ public class SynacorVM {
     
     // Initialize the program counter
     programCounter = 0;
+    
+    LOGGER.log(Level.FINE, "Finised initializing VM.");
   }
   
   // Start the VMs program execution
@@ -38,22 +45,26 @@ public class SynacorVM {
       switch (opcode) {
         case 0:
           halt();
+          LOGGER.log(Level.FINE, "halt");
           break;
           
         case 1:
           a = memory.read(programCounter++);
           b = memory.read(programCounter++);
           set(a, b);
+          LOGGER.log(Level.FINE, "set{0}{1}", new Object[]{a, b});
           break;
           
         case 2:
           a = memory.read(programCounter++);
           push(a);
+          LOGGER.log(Level.FINE, "push{0}", new Object[]{a});
           break;
           
         case 3:
           a = memory.read(programCounter++);
           pop(a);
+          LOGGER.log(Level.FINE, "pop{0}", new Object[]{a});
           break;
           
         case 4:
@@ -61,19 +72,23 @@ public class SynacorVM {
           b = memory.read(programCounter++);
           c = memory.read(programCounter++);
           eq(a, b, c);
+          LOGGER.log(Level.FINE, "eq{0}{1}{2}", new Object[]{a, b, c});
           break;
           
         case 19:
-          out(memory.read(programCounter++));
+          a = memory.read(programCounter++);
+          out(a);
+          LOGGER.log(Level.FINE, "eq{0}", new Object[]{a});
           break;
           
         case 21:
           noop();
+          LOGGER.log(Level.FINE, "noop");
           break;
           
         default:
-          System.out.println("Opcode wasn't understood! Terminating.");
           halt();
+          LOGGER.log(Level.SEVERE, "Opcode wasn't understood, terminating.");
           break;
       }
     }
