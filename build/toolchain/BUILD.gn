@@ -1,0 +1,11 @@
+toolchain("gcc") {
+  tool("cxx") {
+    command = "g++ -c {{source}} -o {{output}}"
+    outputs = [ "{{source_out_dir}}/{{source_name_part}}.o" ]
+  }
+  tool("link") {
+    outfile = "{{target_output_name}}{{output_extension}}"
+    command = "g++ {{inputs}} -o $outfile"
+    outputs = [ outfile ]
+  }
+}
